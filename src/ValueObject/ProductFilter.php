@@ -23,7 +23,7 @@ class ProductFilter{
         return $this->name;
     }
 
-    public function getPage():string{
+    public function getPage():int{
         return $this->page;
     }
 
