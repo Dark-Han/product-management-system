@@ -11,10 +11,6 @@ class ProductService{
     {
     }
 
-    public function getProductsPerPage($page){
-        return $this->productRepository->getProductsPerPage($page);
-    }
-
     public function getProductsByFilterParams(ProductFilter $filter){
         return $this->productRepository->getProductsByFilterParams($filter);
     }

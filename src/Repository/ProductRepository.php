@@ -41,19 +41,6 @@ class ProductRepository extends ServiceEntityRepository
         }
     }
 
-    public function getProductsPerPage(int $page)
-    {
-        $query = $this->getEntityManager()->createQuery('SELECT p FROM App\Entity\Product p');
-
-        $pagination = $this->paginator->paginate(
-            $query,
-            $page,
-            1
-        );
-
-        return $pagination;
-    }
-
     public function getProductsByFilterParams(ProductFilter $filter)
     {
         $query = $this->createQueryBuilder('p');

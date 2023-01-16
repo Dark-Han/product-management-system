@@ -12,18 +12,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProductController extends AbstractController
 {
     #[Route('/products', name: 'app_product')]
-    public function index(Request $request,ProductService $productService): Response
+    public function index(Request $request, ProductService $productService): Response
     {
-        if (!is_null($request->query->get('name'))){
-            $productFilter=new ProductFilter($request->query->get('name'),$request->query->getInt('page'));
-            $products=$productService->getProductsByFilterParams($productFilter);
-        }
-        else{
-            $products=$productService->getProductsPerPage($request->query->getInt('page'));
-        }
+        $productFilter = new ProductFilter($request->query->get('name'), $request->query->getInt('page'));
+        $products = $productService->getProductsByFilterParams($productFilter);
 
-        return $this->render('product/index.html.twig',[
-            'products'=>$products
+        return $this->render('product/index.html.twig', [
+            'products' => $products
         ]);
     }
 
