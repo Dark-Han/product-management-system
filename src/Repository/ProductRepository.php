@@ -3,9 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\ValueObject\ProductFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
+
 /**
  * @extends ServiceEntityRepository<Product>
  *
@@ -16,7 +18,7 @@ use Knp\Component\Pager\PaginatorInterface;
  */
 class ProductRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry,private PaginatorInterface $paginator)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, Product::class);
     }
@@ -39,8 +41,9 @@ class ProductRepository extends ServiceEntityRepository
         }
     }
 
-    public function getProductsPerPage(int $page){
-        $query=$this->getEntityManager()->createQuery('SELECT p FROM App\Entity\Product p');
+    public function getProductsPerPage(int $page)
+    {
+        $query = $this->getEntityManager()->createQuery('SELECT p FROM App\Entity\Product p');
 
         $pagination = $this->paginator->paginate(
             $query,
@@ -51,14 +54,20 @@ class ProductRepository extends ServiceEntityRepository
         return $pagination;
     }
 
-    public function getProductsByName($name): array
+    public function getProductsByFilterParams(ProductFilter $filter)
     {
-        return $this->createQueryBuilder('p')
-            ->where('p.name LIKE :name')
-            ->setParameter('name', "%$name%")
-            ->getQuery()
-            ->getResult()
-        ;
+        $query = $this->createQueryBuilder('p');
+
+        if (!is_null($filter->getName())) {
+            $query->where('p.name LIKE :name')
+                ->setParameter('name', '%' . $filter->getName() . '%');
+        }
+
+        return $this->paginator->paginate(
+            $query,
+            $filter->getPage(),
+            1
+        );
     }
 
 }

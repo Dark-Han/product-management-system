@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Repository\ProductRepository;
+use App\ValueObject\ProductFilter;
 
 class ProductService{
 
@@ -14,8 +15,8 @@ class ProductService{
         return $this->productRepository->getProductsPerPage($page);
     }
 
-    public function getProductsByName(string $productName){
-        return $this->productRepository->getProductsByName($productName);
+    public function getProductsByFilterParams(ProductFilter $filter){
+        return $this->productRepository->getProductsByFilterParams($filter);
     }
 
 }
