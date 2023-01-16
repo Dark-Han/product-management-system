@@ -14,6 +14,10 @@ class ProductService{
         return $this->productRepository->findAll();
     }
 
+    public function getProductsByName(string $productName){
+        return $this->productRepository->getProductsByName($productName);
+    }
+
 }
 
 ?>
