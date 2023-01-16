@@ -10,8 +10,8 @@ class ProductService{
     {
     }
 
-    public function getAllProducts(){
-        return $this->productRepository->findAll();
+    public function getProductsPerPage($page){
+        return $this->productRepository->getProductsPerPage($page);
     }
 
     public function getProductsByName(string $productName){

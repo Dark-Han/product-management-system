@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-
+use Knp\Component\Pager\PaginatorInterface;
 /**
  * @extends ServiceEntityRepository<Product>
  *
@@ -16,7 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry,private PaginatorInterface $paginator)
     {
         parent::__construct($registry, Product::class);
     }
@@ -37,6 +37,18 @@ class ProductRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getProductsPerPage(int $page){
+        $query=$this->getEntityManager()->createQuery('SELECT p FROM App\Entity\Product p');
+
+        $pagination = $this->paginator->paginate(
+            $query,
+            $page,
+            1
+        );
+
+        return $pagination;
     }
 
     public function getProductsByName($name): array

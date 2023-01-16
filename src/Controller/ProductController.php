@@ -17,7 +17,7 @@ class ProductController extends AbstractController
             $products=$productService->getProductsByName($request->query->get('name'));
         }
         else{
-            $products=$productService->getAllProducts();
+            $products=$productService->getProductsPerPage($request->query->getInt('page'));
         }
 
         return $this->render('product/index.html.twig',[
