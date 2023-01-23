@@ -38,3 +38,9 @@ services:
       MYSQL_DATABASE: management_system
     ports:
       - '3306:3306'
+
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    ports:
+      - '5672:5672'
+      - '15672:15672'
