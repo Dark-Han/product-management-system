@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Импорт</title>
+</head>
+<body>
+<!-- (A) UPLOAD BUTTON & FILE LIST -->
+<form>
+    <div id="list"></div>
+    <input type="button" id="pick" value="Upload">
+</form>
+
+<!-- (B) LOAD PLUPLOAD FROM CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plupload/3.1.5/plupload.full.min.js"></script>
+<script>
+    // (C) INITIALIZE UPLOADER
+    window.onload = () => {
+        // (C1) GET HTML FILE LIST
+        var list = document.getElementById("list");
+
+        // (C2) INIT PLUPLOAD
+        var uploader = new plupload.Uploader({
+            runtimes: "html5",
+            browse_button: "pick",
+            url: "/products/import-xml",
+            chunk_size: "1mb",
+            init: {
+                PostInit: () => list.innerHTML = "<div>Ready</div>",
+                FilesAdded: (up, files) => {
+                    plupload.each(files, file => {
+                        let row = document.createElement("div");
+                        row.id = file.id;
+                        row.innerHTML = `${file.name} (${plupload.formatSize(file.size)}) <strong></strong>`;
+                        list.appendChild(row);
+                    });
+                    uploader.start();
+                },
+                UploadProgress: (up, file) => {
+                    document.querySelector(`#${file.id} strong`).innerHTML = `${file.percent}%`;
+                },
+                Error: (up, err) => console.error(err)
+            }
+        });
+        uploader.init();
+    };
+</script>
+</body>
+</html>
