@@ -46,10 +46,10 @@ class FileStorage
 
         if ($fileChunk->isLastChunk()) {
             rename("{$filePath}.part", $filePath);
-            return new UploadedFileResult(true,$filePath);
+            return UploadedFileResult::fullyUploaded($filePath);
         }
 
-            return new UploadedFileResult(false,$filePath);
+            return UploadedFileResult::notFullyUploaded();
     }
 
 }

@@ -38,8 +38,8 @@ class ProductService
 
         $uploadFileResult = $this->fileStorage->uploadFileStreamByChunks($chunk);
 
-        if ($uploadFileResult->isFullUploaded()) {
-            $this->bus->dispatch(new ImportXmlMessage($uploadFileResult->getUploadedPath()));
+        if ($uploadFileResult->isFullyUploaded()) {
+            $this->bus->dispatch(new ImportXmlMessage($uploadFileResult->getFullyUploadedPath()));
         }
 
         return 'imported';
