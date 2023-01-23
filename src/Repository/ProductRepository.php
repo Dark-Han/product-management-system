@@ -53,7 +53,7 @@ class ProductRepository extends ServiceEntityRepository
         return $this->paginator->paginate(
             $query,
             $filter->getPage(),
-            1
+            100
         );
     }
 
