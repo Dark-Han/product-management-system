@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\ValueObject\FileChunk;
 use App\ValueObject\UploadedFileResult;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class FileStorage
@@ -14,22 +13,6 @@ class FileStorage
     {
     }
 
-    public function upload(UploadedFile $file, string $folder): string
-    {
-        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFilename = $this->slugger->slug($originalFilename);
-        $fileName = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
-
-        $pathToUploadedFolder = $this->uploadsFolder . $folder;
-
-        try {
-            $file->move($pathToUploadedFolder, $fileName);
-        } catch (FileException $e) {
-            // ...
-        }
-
-        return $pathToUploadedFolder . "/" . $fileName;
-    }
 
     //отрефакторить
     public function uploadFileStreamByChunks(FileChunk $fileChunk):UploadedFileResult
