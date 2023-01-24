@@ -15,18 +15,13 @@ class UploadedFileResult{
     public static function notFullyUploaded():UploadedFileResult{
         return new UploadedFileResult(false,null);
     }
-    /**
-     * @return bool
-     */
+
     public function isFullyUploaded(): bool
     {
         return $this->isFullyUploaded;
     }
 
-    /**
-     * @return string
-     */
-    public function getFullyUploadedPath(): string
+    public function getFullyUploadedPath(): ?string
     {
         return $this->fullyUploadedPath;
     }
