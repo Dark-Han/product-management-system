@@ -2,13 +2,13 @@
 
 namespace App\Handler;
 
-use App\Entity\Category;
 use App\Entity\Product;
 use App\Message\ImportXmlMessage;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class ImportXmlMessageHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class ImportXmlMessageHandler
 {
 
     public function __construct(private EntityManagerInterface $entityManager)
