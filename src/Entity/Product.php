@@ -69,7 +69,7 @@ class Product
         return $this->weight;
     }
 
-    public function setWeight(int $weight): self
+    public function setWeight(string $weight): self
     {
         $this->weight = $weight;
 
