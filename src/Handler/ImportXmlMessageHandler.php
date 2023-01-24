@@ -32,6 +32,9 @@ class ImportXmlMessageHandler implements MessageHandlerInterface
                 $product = new Product();
                 $product->setName((string)$productXmlRowObject->name);
                 $product->setDescription((string)$productXmlRowObject->description);
+                $product->setDescriptionCommon((string)$productXmlRowObject->description_common);
+                $product->setDescriptionForOzon((string)$productXmlRowObject->description_for_ozon);
+                $product->setDescriptionForWildberries((string)$productXmlRowObject->description_for_wildberries);
                 $product->setWeight((int)$productXmlRowObject->weight);
                 $product->setCategory($productXmlRowObject->category);
 
@@ -46,6 +49,7 @@ class ImportXmlMessageHandler implements MessageHandlerInterface
         }
 
         $this->entityManager->flush();
+        $this->entityManager->clear();
 
         $xml->close();
     }

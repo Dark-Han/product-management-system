@@ -20,11 +20,20 @@ class Product
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column]
-    private ?int $weight = null;
+    #[ORM\Column(length: 255)]
+    private ?string $weight = null;
 
-    #[ORM\ManyToOne]
-    private ?Category $category = null;
+    #[ORM\Column(length: 255)]
+    private ?string $category = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $description_common = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $description_for_ozon = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description_for_wildberries = null;
 
     public function getId(): ?int
     {
@@ -67,14 +76,50 @@ class Product
         return $this;
     }
 
-    public function getCategory(): ?Category
+    public function getCategory(): string
     {
         return $this->category;
     }
 
-    public function setCategory(?Category $category): self
+    public function setCategory(string $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getDescriptionCommon(): ?string
+    {
+        return $this->description_common;
+    }
+
+    public function setDescriptionCommon(string $description_common): self
+    {
+        $this->description_common = $description_common;
+
+        return $this;
+    }
+
+    public function getDescriptionForOzon(): ?string
+    {
+        return $this->description_for_ozon;
+    }
+
+    public function setDescriptionForOzon(string $description_for_ozon): self
+    {
+        $this->description_for_ozon = $description_for_ozon;
+
+        return $this;
+    }
+
+    public function getDescriptionForWildberries(): ?string
+    {
+        return $this->description_for_wildberries;
+    }
+
+    public function setDescriptionForWildberries(?string $description_for_wildberries): self
+    {
+        $this->description_for_wildberries = $description_for_wildberries;
 
         return $this;
     }
