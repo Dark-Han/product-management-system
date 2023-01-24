@@ -35,7 +35,7 @@ class ProductController extends AbstractController
     {
         $productService->importFileByChunks(
             $request->request->get('name'),
-            $_FILES['file']['tmp_name'],
+            file_get_contents($_FILES['file']['tmp_name']),
             $request->request->get('chunk'),
             $request->request->get('chunks')
         );

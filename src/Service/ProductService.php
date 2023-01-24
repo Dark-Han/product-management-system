@@ -29,10 +29,10 @@ class ProductService
         return $this->productRepository->getProductsByFilterParams($filter);
     }
 
-    public function importFileByChunks(string $fileName, string $pathToChuck, int $chuckSerialNumber, int $totalChucksCount)
+    public function importFileByChunks(string $fileName, string $content, int $chuckSerialNumber, int $totalChucksCount)
     {
         $chunk = new FileChunk($fileName
-            , $pathToChuck
+            , $content
             , $chuckSerialNumber
             , $chuckSerialNumber === $totalChucksCount - 1);
 
