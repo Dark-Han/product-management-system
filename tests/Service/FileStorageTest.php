@@ -4,36 +4,30 @@ namespace App\Tests\Service;
 
 use App\Service\FileStorage;
 use App\ValueObject\FileChunk;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-class FileStorageTest extends KernelTestCase
+class FileStorageTest extends TestCase
 {
-
-    private readonly string $uploadsFolder;
+    private Filesystem $filesystem;
+    private FileStorage $fileStorage;
 
     protected function setUp(): void
     {
         parent::setUp();
-        self::bootKernel();
 
-        $this->uploadsFolder=static::$kernel->getProjectDir().'/tests/Uploads/';
+        $this->filesystem=$this->createMock(Filesystem::class);
+        $this->fileStorage=new FileStorage('test/',$this->filesystem);
     }
 
     public function testWhenFirstChunkShouldCreatePartOfFile(): void
     {
         $fileChunk=new FileChunk('test.xml','test',0,false);
 
-        $fileSystem=$this->createMock(Filesystem::class);
+        $this->filesystem->expects(self::once())
+            ->method('dumpFile');
 
-        $fileSystem->expects(self::once())
-                    ->method('dumpFile');
-
-        static::getContainer()->set(Filesystem::class,$fileSystem);
-
-        $fileStorage=static::getContainer()->get(FileStorage::class);
-
-        $uploadedFileResult=$fileStorage->uploadFileStreamByChunks($fileChunk);
+        $uploadedFileResult=$this->fileStorage->uploadFileStreamByChunks($fileChunk);
 
         $this->assertFalse($uploadedFileResult->isFullyUploaded());
         $this->assertNull($uploadedFileResult->getFullyUploadedPath());
@@ -42,16 +36,10 @@ class FileStorageTest extends KernelTestCase
     public function testAfterFirstChunkShouldAppendChunkToPartOfFile(){
         $fileChunk=new FileChunk('test.xml','test',2,false);
 
-        $fileSystem=$this->createMock(Filesystem::class);
-
-        $fileSystem->expects(self::once())
+        $this->filesystem->expects(self::once())
             ->method('appendToFile');
 
-        static::getContainer()->set(Filesystem::class,$fileSystem);
-
-        $fileStorage=static::getContainer()->get(FileStorage::class);
-
-        $uploadedFileResult=$fileStorage->uploadFileStreamByChunks($fileChunk);
+        $uploadedFileResult=$this->fileStorage->uploadFileStreamByChunks($fileChunk);
 
         $this->assertFalse($uploadedFileResult->isFullyUploaded());
         $this->assertNull($uploadedFileResult->getFullyUploadedPath());
@@ -60,19 +48,13 @@ class FileStorageTest extends KernelTestCase
     public function testLastChunkShouldCreateFullyFile(){
         $fileChunk=new FileChunk('test.xml','test',2,true);
 
-        $fileSystem=$this->createMock(Filesystem::class);
-
-        $fileSystem->expects(self::once())
+        $this->filesystem->expects(self::once())
             ->method('appendToFile');
 
-        $fileSystem->expects(self::once())
+        $this->filesystem->expects(self::once())
             ->method('rename');
 
-        static::getContainer()->set(Filesystem::class,$fileSystem);
-
-        $fileStorage=static::getContainer()->get(FileStorage::class);
-
-        $uploadedFileResult=$fileStorage->uploadFileStreamByChunks($fileChunk);
+        $uploadedFileResult=$this->fileStorage->uploadFileStreamByChunks($fileChunk);
 
         $this->assertTrue($uploadedFileResult->isFullyUploaded());
         $this->assertStringEndsWith('test.xml',$uploadedFileResult->getFullyUploadedPath());
