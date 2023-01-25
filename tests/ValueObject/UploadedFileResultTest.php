@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\App\ValueObject;
+namespace App\Tests\ValueObject;
 
 use App\ValueObject\UploadedFileResult;
 use PHPUnit\Framework\TestCase;
