@@ -2,15 +2,11 @@
 
 namespace App\Service;
 
-use App\Entity\Category;
-use App\Entity\Product;
 use App\Message\ImportXmlMessage;
 use App\Message\ProductsFromXmlParsed;
 use App\Repository\ProductRepository;
 use App\ValueObject\FileChunk;
 use App\ValueObject\ProductFilter;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class ProductService
