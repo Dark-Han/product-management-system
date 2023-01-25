@@ -25,12 +25,12 @@ class ProductService
         return $this->productRepository->getProductsByFilterParams($filter);
     }
 
-    public function importFileByChunks(string $fileName, string $content, int $chuckSerialNumber, int $totalChucksCount)
+    public function importFileByChunks(string $fileName, string $content, int $chunkSerialNumber, int $totalChunksCount)
     {
         $chunk = new FileChunk($fileName
             , $content
-            , $chuckSerialNumber
-            , $chuckSerialNumber === $totalChucksCount - 1);
+            , $chunkSerialNumber
+            , $chunkSerialNumber === $totalChunksCount - 1);
 
         $uploadFileResult = $this->fileStorage->uploadFileStreamByChunks($chunk);
 
