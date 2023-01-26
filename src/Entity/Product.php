@@ -64,7 +64,7 @@ class Product
         return $this;
     }
 
-    public function getWeight(): ?int
+    public function getWeight(): ?string
     {
         return $this->weight;
     }
