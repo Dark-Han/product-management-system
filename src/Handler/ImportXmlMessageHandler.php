@@ -6,28 +6,29 @@ use App\Entity\Product;
 use App\Message\ImportXmlMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use XMLReader;
+use SimpleXMLElement;
 
 #[AsMessageHandler]
 class ImportXmlMessageHandler
 {
 
+    private XMLReader $XMLReader;
+
     public function __construct(private EntityManagerInterface $entityManager)
     {
+        $this->XMLReader=new XMLReader();
     }
 
     public function __invoke(ImportXmlMessage $message)
     {
-        $products = [];
-
-        $xml = new \XMLReader();
-        $xml->open($message->getXml());
+        $this->XMLReader->open($message->getXml());
 
         $currentRow = 1;
 
-        while ($xml->read()) {
-            if ($xml->nodeType == \XMLReader::ELEMENT && $xml->name == 'product') {
-                $productXmlRow = $xml->readOuterXml();
-                $productXmlRowObject = simplexml_load_string($productXmlRow, 'SimpleXMLElement', LIBXML_NOBLANKS && LIBXML_NOWARNING);
+        while ($this->XMLReader->read()) {
+            if ($this->isProductRow()) {
+                $productXmlRowObject = $this->getProductXmlRowObject();
 
                 $product = new Product();
                 $product->setName((string)$productXmlRowObject->name);
@@ -35,8 +36,8 @@ class ImportXmlMessageHandler
                 $product->setDescriptionCommon((string)$productXmlRowObject->description_common);
                 $product->setDescriptionForOzon((string)$productXmlRowObject->description_for_ozon);
                 $product->setDescriptionForWildberries((string)$productXmlRowObject->description_for_wildberries);
-                $product->setWeight((int)$productXmlRowObject->weight);
-                $product->setCategory($productXmlRowObject->category);
+                $product->setWeight((string)$productXmlRowObject->weight);
+                $product->setCategory((string)$productXmlRowObject->category);
 
                 $this->entityManager->persist($product);
 
@@ -51,6 +52,17 @@ class ImportXmlMessageHandler
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        $xml->close();
+        $this->XMLReader->close();
+    }
+
+    private function isProductRow(): bool
+    {
+        return $this->XMLReader->nodeType === $this->XMLReader::ELEMENT && $this->XMLReader->name === 'product';
+    }
+
+    private function getProductXmlRowObject(): false|SimpleXMLElement
+    {
+        $productXmlRow = $this->XMLReader->readOuterXml();
+        return simplexml_load_string($productXmlRow, 'SimpleXMLElement', LIBXML_NOBLANKS && LIBXML_NOWARNING);
     }
 }
