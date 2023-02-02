@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\ValueObject\ProductWeight;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -20,8 +21,8 @@ class Product
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $weight = null;
+    #[ORM\Embedded(class: ProductWeight::class, columnPrefix: false)]
+    private ProductWeight $weight;
 
     #[ORM\Column(length: 255)]
     private ?string $category = null;
@@ -64,12 +65,12 @@ class Product
         return $this;
     }
 
-    public function getWeight(): ?string
+    public function getWeight(): ?ProductWeight
     {
         return $this->weight;
     }
 
-    public function setWeight(string $weight): self
+    public function setWeight(ProductWeight $weight): self
     {
         $this->weight = $weight;
 
