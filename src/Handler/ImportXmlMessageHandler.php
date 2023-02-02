@@ -4,6 +4,8 @@ namespace App\Handler;
 
 use App\Entity\Product;
 use App\Message\ImportXmlMessage;
+use App\ValueObject\ProductWeight;
+use App\ValueObject\WeightUnit;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use XMLReader;
@@ -36,7 +38,9 @@ class ImportXmlMessageHandler
                 $product->setDescriptionCommon((string)$productXmlRowObject->description_common);
                 $product->setDescriptionForOzon((string)$productXmlRowObject->description_for_ozon);
                 $product->setDescriptionForWildberries((string)$productXmlRowObject->description_for_wildberries);
-                $product->setWeight((string)$productXmlRowObject->weight);
+                $weight=explode(' ',$productXmlRowObject->weight);
+
+                $product->setWeight(new ProductWeight($weight[0],WeightUnit::getCase($weight[1])));
                 $product->setCategory((string)$productXmlRowObject->category);
 
                 $this->entityManager->persist($product);
