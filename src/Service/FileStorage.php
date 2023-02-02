@@ -17,7 +17,7 @@ class FileStorage
     {
         $filePath = $this->uploadsFolder.$fileChunk->fileName();
 
-        if ($fileChunk->serialNumber() == 0){
+        if ($fileChunk->isFirstChunk()){
             $this->filesystem->dumpFile("$filePath.part",$fileChunk->content());
         }else{
             $this->filesystem->appendToFile("$filePath.part",$fileChunk->content());
