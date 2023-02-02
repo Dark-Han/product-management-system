@@ -5,6 +5,8 @@ namespace App\Tests\Repository;
 use App\Entity\Product;
 use App\Tests\AbstractRepositoryTest;
 use App\ValueObject\ProductFilter;
+use App\ValueObject\ProductWeight;
+use App\ValueObject\WeightUnit;
 
 class ProductRepositoryTest extends AbstractRepositoryTest
 {
@@ -39,7 +41,7 @@ class ProductRepositoryTest extends AbstractRepositoryTest
             $product->setDescriptionForOzon('test');
             $product->setDescriptionCommon('test');
             $product->setCategory('test');
-            $product->setWeight('test');
+            $product->setWeight(new ProductWeight(2,WeightUnit::kg));
 
             $this->em->persist($product);
         }
