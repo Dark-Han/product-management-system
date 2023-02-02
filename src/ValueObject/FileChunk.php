@@ -14,6 +14,10 @@ class FileChunk
     {
     }
 
+    public function isFirstChunk(){
+        return $this->serialNumber===0;
+    }
+
     public function serialNumber(): int
     {
         return $this->serialNumber;
